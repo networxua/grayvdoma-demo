@@ -420,12 +420,28 @@ h1 { font-size: clamp(2.7rem, 11vw, 5.6rem); }
 @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 @media (min-width: 900px) {
-  .hero-media img { object-position: 72% center; transform-origin: 70% 50%; }
+  .hero-media { inset: 0; width: 100vw; height: 100%; }
+  .hero-media img {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transform: none;
+    transform-origin: center center;
+  }
   .veil {
     background: linear-gradient(90deg, rgba(5, 6, 10, 0.86) 0%, rgba(5, 6, 10, 0.62) 32%, rgba(5, 6, 10, 0.18) 58%, rgba(5, 6, 10, 0) 100%);
   }
   .hero { justify-content: center; }
-  .hero-copy { padding: 0 0 0 7vw; }
+  .hero-copy { padding: 0 0 0 6vw; max-width: 920px; }
+  .hero h1 { font-size: clamp(2.5rem, 3.5vw, 4.05rem); }
+  .hero .cta { padding: 6px; }
+  .hero .cta-label { padding: 22px 44px; font-size: 1.45rem; }
+  .hero .cta-spin {
+    background: conic-gradient(from 0deg, rgba(255, 255, 255, 0.28) 0 210deg, #ffffff 250deg, #d9f3ff 300deg, #6eb8ff 340deg, rgba(255, 255, 255, 0.28) 360deg);
+  }
   .block { padding: 120px 7vw; }
   .versus { grid-template-columns: 1fr 1fr; align-items: end; gap: 48px; }
   .rail { margin-left: -7vw; margin-right: -7vw; padding-left: 7vw; padding-right: 7vw; }
