@@ -1,169 +1,111 @@
 (function () {
   const GAMES = [
-    { id: "diablo-4", name: "Diablo 4", cover: "assets/covers/diablo-4.webp", free: true },
-    { id: "god-of-war-ragnarok", name: "God of War Ragnarök", cover: "assets/covers/god-of-war-ragnarok.webp", free: false },
-    { id: "elden-ring", name: "Elden Ring", cover: "assets/covers/elden-ring.webp", free: false },
-    { id: "ghost-of-tsushima", name: "Ghost of Tsushima", cover: "assets/covers/ghost-of-tsushima.webp", free: false },
-    { id: "cyberpunk-2077", name: "Cyberpunk 2077", cover: "assets/covers/cyberpunk-2077.webp", free: false },
-    { id: "black-myth-wukong", name: "Black Myth: Wukong", cover: "assets/covers/black-myth-wukong.webp", free: false },
-    { id: "horizon-forbidden-west", name: "Horizon Forbidden West", cover: "assets/covers/horizon-forbidden-west.webp", free: false },
-    { id: "astro-bot", name: "Astro Bot", cover: "assets/covers/astro-bot.webp", free: false }
+    { id: "diablo-4", name: "Diablo 4", cover: "assets/covers/diablo-4.webp", free: true, spine: "#ffe14a" },
+    { id: "god-of-war-ragnarok", name: "God of War Ragnarök", cover: "assets/covers/god-of-war-ragnarok.webp", free: false, spine: "#7cf5c8" },
+    { id: "elden-ring", name: "Elden Ring", cover: "assets/covers/elden-ring.webp", free: false, spine: "#ff4f8b" },
+    { id: "ghost-of-tsushima", name: "Ghost of Tsushima", cover: "assets/covers/ghost-of-tsushima.webp", free: false, spine: "#7a5cff" },
+    { id: "cyberpunk-2077", name: "Cyberpunk 2077", cover: "assets/covers/cyberpunk-2077.webp", free: false, spine: "#ff7a1a" },
+    { id: "black-myth-wukong", name: "Black Myth: Wukong", cover: "assets/covers/black-myth-wukong.webp", free: false, spine: "#fff6ea" },
+    { id: "horizon-forbidden-west", name: "Horizon Forbidden West", cover: "assets/covers/horizon-forbidden-west.webp", free: false, spine: "#3ddcff" },
+    { id: "astro-bot", name: "Astro Bot", cover: "assets/covers/astro-bot.webp", free: false, spine: "#c6f54a" }
   ];
-  const BUY = 2500;
 
-  const money = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
-  const rentOf = (days) => {
-    const base = 100 * (days / 7);
-    const off = days === 14 ? 0.1 : days === 28 ? 0.2 : 0;
-    return Math.round(base * (1 - off));
+  const track = document.getElementById("track");
+  const scene = document.getElementById("scene");
+  GAMES.forEach((game, i) => {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.style.setProperty("--i", i);
+    slot.dataset.id = game.id;
+    slot.innerHTML =
+      '<div class="pivot"><div class="box" style="--spine:' + game.spine + '">' +
+      '<div class="hinge">' +
+      '<div class="front"><img src="' + game.cover + '" alt=""></div>' +
+      '<div class="back"><span class="seal ' + (game.free ? "free" : "") + '">' + (game.free ? "Вільно" : "Зайнято") + "</span>" +
+      "<p>" + (game.free ? "7 днів" : "В підписці") + "</p>" +
+      "<strong>" + (game.free ? "від 100 ₴" : game.name) + "</strong>" +
+      '<button class="take" type="button">Взяти</button></div>' +
+      '<div class="spine"></div></div></div>' +
+      '<div class="shadow"></div></div>';
+    track.appendChild(slot);
+  });
+
+  let offset = 0;
+  let drag = null;
+  const max = () => Math.max(0, track.scrollWidth - scene.clientWidth + 8);
+  const move = (x) => {
+    offset = Math.max(0, Math.min(max(), x));
+    track.style.transform = "translate3d(" + -offset + "px,0,0)";
   };
 
-  const picks = document.getElementById("game-picks");
-  const priceEl = document.getElementById("rent-price");
-  const saveEl = document.getElementById("save");
-  const termLabel = document.getElementById("term-label");
-  let calcGame = GAMES[0];
-  let calcDays = 7;
-
-  function paintCalc() {
-    const rent = rentOf(calcDays);
-    priceEl.innerHTML = money(rent) + "&nbsp;₴";
-    saveEl.textContent = money(BUY - rent);
-    termLabel.textContent = "на " + calcDays + " днів";
-    picks.querySelectorAll(".chip").forEach((btn) => {
-      btn.classList.toggle("is-on", btn.dataset.id === calcGame.id);
-    });
-  }
-
-  GAMES.forEach((game) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "chip" + (game.free ? " is-on" : "");
-    btn.dataset.id = game.id;
-    btn.textContent = game.name;
-    btn.addEventListener("click", () => {
-      calcGame = game;
-      paintCalc();
-    });
-    picks.appendChild(btn);
+  scene.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".take")) return;
+    drag = { x: e.clientX, start: offset, moved: false, pointer: e.pointerId };
+    scene.setPointerCapture(e.pointerId);
   });
-
-  document.querySelectorAll(".term").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      calcDays = Number(btn.dataset.days);
-      document.querySelectorAll(".term").forEach((el) => el.classList.toggle("is-on", el === btn));
-      paintCalc();
-    });
+  scene.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.pointer) return;
+    const dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 8) drag.moved = true;
+    move(drag.start - dx);
+    const tilt = Math.max(-14, Math.min(14, -dx * 0.08));
+    track.style.setProperty("--tilt", tilt + "deg");
+    track.querySelectorAll(".box").forEach((box) => box.style.setProperty("--tilt", tilt + "deg"));
   });
-  paintCalc();
-
-  const rail = document.getElementById("rail");
-  GAMES.forEach((game) => {
-    const card = document.createElement("article");
-    card.className = "hit";
-    card.innerHTML =
-      '<div class="shot"><img src="' + game.cover + '" alt="" width="640" height="400" loading="lazy">' +
-      '<span class="badge' + (game.free ? " free" : "") + '">' + (game.free ? "Вільно" : "Зайнято") + "</span></div>" +
-      "<h3>" + game.name + "</h3>" +
-      '<p class="meta">від 100 ₴ / 7 днів</p>' +
-      '<button class="go" type="button">' + (game.free ? "Підібрати" : "Повідомити, коли звільниться") + "</button>";
-    card.querySelector(".go").addEventListener("click", () => openBot({ gameId: game.id, intent: game.free ? "rent" : "notify" }));
-    rail.appendChild(card);
-  });
-
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const photo = document.querySelector(".hero-media img");
-  const hero = document.querySelector(".hero");
-  if (!reduce && photo && "IntersectionObserver" in window) {
-    let on = false;
-    let raf = 0;
-    const loop = () => {
-      if (!on) return;
-      const y = window.scrollY;
-      photo.style.transform = "translate3d(0," + (y * 0.12).toFixed(1) + "px,0) scale(" + (1.04 + Math.min(y / innerHeight, 1) * 0.04).toFixed(3) + ")";
-      raf = requestAnimationFrame(loop);
-    };
-    const io = new IntersectionObserver((entries) => {
-      on = entries[0].isIntersecting;
-      cancelAnimationFrame(raf);
-      if (on) loop();
-    });
-    io.observe(hero);
-  }
-
-  const steps = document.getElementById("steps");
-  if (steps && "IntersectionObserver" in window) {
-    if (reduce) steps.classList.add("is-on");
-    else {
-      const io = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          steps.classList.add("is-on");
-          io.disconnect();
-        }
-      }, { threshold: 0.4 });
-      io.observe(steps);
+  const endDrag = (e) => {
+    if (!drag) return;
+    const moved = drag.moved;
+    const target = e.target.closest(".slot");
+    drag = null;
+    track.querySelectorAll(".box").forEach((box) => box.style.setProperty("--tilt", "0deg"));
+    if (!moved && target && !e.target.closest(".take")) {
+      const open = target.classList.contains("is-open");
+      track.querySelectorAll(".slot").forEach((slot) => slot.classList.remove("is-open"));
+      if (!open) target.classList.add("is-open");
     }
-  }
+  };
+  scene.addEventListener("pointerup", endDrag);
+  scene.addEventListener("pointercancel", endDrag);
+  track.addEventListener("click", (e) => {
+    const btn = e.target.closest(".take");
+    if (!btn) return;
+    e.stopPropagation();
+    const id = btn.closest(".slot").dataset.id;
+    openBot({ gameId: id });
+  });
 
-  const heroCta = document.querySelector(".hero .cta");
-  const endCta = document.querySelector(".end .cta");
-  if (heroCta && "IntersectionObserver" in window) {
-    const seen = new Set();
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) seen.add(entry.target);
-        else seen.delete(entry.target);
-      });
-      document.body.classList.toggle("show-float", seen.size === 0);
-    }, { threshold: 0.4 });
-    io.observe(heroCta);
-    if (endCta) io.observe(endCta);
-  }
+  scene.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    if (max() <= 0) return;
+    move(offset + e.deltaY);
+  }, { passive: true });
 
   const sheet = document.getElementById("sheet");
   const backdrop = document.getElementById("backdrop");
   const log = document.getElementById("log");
-  let lastFocus = null;
+  const money = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+  const rentOf = (days) => Math.round(100 * (days / 7) * (days === 14 ? 0.9 : days === 28 ? 0.8 : 1));
 
   function closeBot() {
-    sheet.classList.remove("is-on");
-    backdrop.classList.remove("is-on");
     sheet.hidden = true;
     backdrop.hidden = true;
-    if (lastFocus) lastFocus.focus();
   }
-
   function openBot(opts) {
     opts = opts || {};
-    lastFocus = document.activeElement;
     sheet.hidden = false;
     backdrop.hidden = false;
-    requestAnimationFrame(() => {
-      sheet.classList.add("is-on");
-      backdrop.classList.add("is-on");
-    });
-    const game = GAMES.find((g) => g.id === opts.gameId) || null;
-    if (opts.plan === "sub") renderSub();
-    else if (opts.intent === "notify" && game) renderNotify(game);
-    else if (game) renderDays(game, opts.days || calcDays);
+    const game = GAMES.find((g) => g.id === opts.gameId);
+    if (opts.plan) renderPlan(opts.plan, game);
+    else if (game && !game.free) renderNotify(game);
+    else if (game) renderDays(game);
     else renderGames();
   }
-
   document.querySelectorAll("[data-open-bot]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const days = el.dataset.days ? Number(el.dataset.days) : null;
-      const plan = el.dataset.plan || null;
-      if (plan === "sub") openBot({ plan: "sub" });
-      else if (days) openBot({ gameId: calcGame.id, days: days });
-      else openBot();
-    });
+    el.addEventListener("click", () => openBot({ plan: el.dataset.plan || null }));
   });
-  document.getElementById("calc-go").addEventListener("click", () => openBot({ gameId: calcGame.id, days: calcDays }));
   document.getElementById("sheet-close").addEventListener("click", closeBot);
   backdrop.addEventListener("click", closeBot);
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeBot();
-  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeBot(); });
 
   function clear() { log.innerHTML = ""; }
   function ask(text) {
@@ -172,12 +114,10 @@
     p.textContent = text;
     log.appendChild(p);
   }
-
   function renderGames() {
     clear();
     ask("Яку гру хочеш?");
     const input = document.createElement("input");
-    input.className = "find";
     input.placeholder = "Пошук";
     input.setAttribute("aria-label", "Пошук гри");
     const box = document.createElement("div");
@@ -186,49 +126,41 @@
       const q = input.value.trim().toLowerCase();
       box.innerHTML = "";
       GAMES.filter((g) => g.name.toLowerCase().includes(q)).forEach((game) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = game.name + (game.free ? " · вільно" : " · зайнято");
-        btn.addEventListener("click", () => {
-          if (game.free) renderDays(game, 7);
-          else renderNotify(game);
-        });
-        box.appendChild(btn);
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = game.name + (game.free ? " · вільно" : " · зайнято");
+        b.addEventListener("click", () => (game.free ? renderDays(game) : renderNotify(game)));
+        box.appendChild(b);
       });
     };
     input.addEventListener("input", draw);
     log.append(input, box);
     draw();
-    input.focus();
   }
-
-  function renderDays(game, preset) {
+  function renderDays(game) {
     clear();
-    ask(game.name + ". На скільки днів?");
+    ask(game.name + ". На скільки?");
     const box = document.createElement("div");
     box.className = "choices";
-    [[7, "7 днів · 100 ₴"], [14, "14 днів · 180 ₴ · −10%"], [28, "28 днів · 320 ₴ · −20%"]].forEach(([days, label]) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      if (days === preset) btn.classList.add("is-on");
-      btn.addEventListener("click", () => renderOffer(game, days));
-      box.appendChild(btn);
+    [[7, "7 днів · 100 ₴"], [14, "14 днів · 180 ₴"], [28, "28 днів · 320 ₴"]].forEach(([d, label]) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.addEventListener("click", () => renderOffer(game, d));
+      box.appendChild(b);
     });
     const sub = document.createElement("button");
     sub.type = "button";
-    sub.textContent = "Підписка · 700 ₴ / місяць";
-    sub.addEventListener("click", () => renderSub(game));
+    sub.textContent = "Підписка · від 300 ₴";
+    sub.addEventListener("click", () => renderPlan("week", game));
     box.appendChild(sub);
     log.appendChild(box);
   }
-
   function renderOffer(game, days) {
     const rent = rentOf(days);
     clear();
     const card = document.createElement("div");
-    card.className = "price-card";
-    card.innerHTML = "<p>" + game.name + " · " + days + " днів</p><div class=\"big\">" + money(rent) + "&nbsp;₴</div><p>Диск ≈2&nbsp;500&nbsp;₴. Лишається ≈" + money(BUY - rent) + "&nbsp;₴.</p>";
+    card.innerHTML = "<p>" + game.name + "</p><div class=\"big\">" + money(rent) + "&nbsp;₴</div><p>" + days + " днів</p>";
     const next = document.createElement("button");
     next.className = "plain";
     next.type = "button";
@@ -236,69 +168,61 @@
     next.addEventListener("click", () => renderForm(game.name + ", " + days + " днів, " + rent + " ₴"));
     log.append(card, next);
   }
-
-  function renderSub(game) {
+  function renderPlan(plan, game) {
+    const map = { week: ["Тиждень", 300], month: ["Місяць", 700], year: ["Рік", 4000] };
+    const [label, price] = map[plan] || map.month;
     clear();
     const card = document.createElement("div");
-    card.className = "price-card";
-    card.innerHTML = "<p>Підписка на місяць" + (game ? " · " + game.name : "") + "</p><div class=\"big\">700&nbsp;₴</div><p>Усі вільні ігри. Зміна раз на 24 години. Один диск ≈2&nbsp;500&nbsp;₴.</p>";
+    card.innerHTML = "<p>Підписка · " + label + (game ? " · " + game.name : "") + "</p><div class=\"big\">" + money(price) + "&nbsp;₴</div><p>Усі вільні ігри. Зміна без обмежень.</p>";
     const next = document.createElement("button");
     next.className = "plain";
     next.type = "button";
     next.textContent = "Залишити заявку";
-    next.addEventListener("click", () => renderForm("Підписка, місяць, 700 ₴" + (game ? ", " + game.name : "")));
+    next.addEventListener("click", () => renderForm("Підписка " + label + ", " + price + " ₴" + (game ? ", " + game.name : "")));
     log.append(card, next);
   }
-
   function renderNotify(game) {
     clear();
     ask(game.name + " зараз зайнятий.");
     const p = document.createElement("p");
-    p.textContent = "Повідомимо, коли з’явиться. Оренда від 100 ₴ / 7 днів.";
-    const next = document.createElement("button");
-    next.className = "plain";
-    next.type = "button";
-    next.textContent = "Залишити заявку";
-    next.addEventListener("click", () => renderForm("Повідомити: " + game.name));
-    log.append(p, next);
+    p.textContent = "Повідомимо, коли з’явиться. Або візьми підписку — міняй інші вільні ігри.";
+    const a = document.createElement("button");
+    a.className = "plain";
+    a.type = "button";
+    a.textContent = "Підписка на місяць · 700 ₴";
+    a.addEventListener("click", () => renderPlan("month", game));
+    const b = document.createElement("button");
+    b.className = "plain";
+    b.type = "button";
+    b.textContent = "Повідомити, коли звільниться";
+    b.addEventListener("click", () => renderForm("Повідомити: " + game.name));
+    log.append(p, a, b);
   }
-
   function renderForm(what) {
     clear();
     ask("Залишити заявку");
+    const note = document.createElement("p");
+    note.textContent = what;
     const form = document.createElement("form");
     form.className = "form";
-    form.innerHTML = '<input name="name" placeholder="Ім’я" autocomplete="name" required aria-label="Ім’я"><input name="contact" placeholder="Telegram або телефон" autocomplete="tel" required aria-label="Telegram або телефон"><p class="err" hidden>Напишіть ім’я і Telegram або телефон.</p><button class="plain" type="submit">Надіслати</button>';
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
+    form.innerHTML = '<input name="name" placeholder="Ім’я" aria-label="Ім’я" required><input name="contact" placeholder="Telegram або телефон" aria-label="Telegram або телефон" required><p class="err" hidden>Напишіть ім’я і контакт.</p><button type="submit">Надіслати</button>';
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
       const data = new FormData(form);
       const name = String(data.get("name") || "").trim();
       const contact = String(data.get("contact") || "").trim();
-      const err = form.querySelector(".err");
-      if (!name || !contact) {
-        err.hidden = false;
-        return;
-      }
-      renderSent(name);
+      if (!name || !contact) { form.querySelector(".err").hidden = false; return; }
+      clear();
+      const done = document.createElement("div");
+      done.className = "sent";
+      const strong = document.createElement("strong");
+      strong.textContent = "Заявка відправлена менеджеру в Telegram.";
+      const p = document.createElement("p");
+      p.textContent = name + ", це демо — повідомлення не надіслане. На бойовому сайті його отримає @SeregaGlusch.";
+      done.append(strong, p);
+      log.appendChild(done);
     });
-    const back = document.createElement("p");
-    back.className = "fine";
-    back.textContent = what;
-    log.append(back, form);
+    log.append(note, form);
     form.elements.name.focus();
-  }
-
-  function renderSent(name) {
-    clear();
-    const box = document.createElement("div");
-    box.className = "sent";
-    box.innerHTML = '<div class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17l9-10" stroke="currentColor" stroke-width="1.8"/></svg></div>';
-    const strong = document.createElement("strong");
-    strong.textContent = "Заявка відправлена менеджеру в Telegram.";
-    const note = document.createElement("p");
-    note.className = "fine";
-    note.textContent = name + ", це демо — повідомлення нікуди не пішло. На бойовому сайті його отримає @SeregaGlusch.";
-    box.append(strong, note);
-    log.appendChild(box);
   }
 })();

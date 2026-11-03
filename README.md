@@ -1,7 +1,7 @@
-# GrayVDoma — головна, прототип
+# GrayVDoma — головна «Полиця»
 
-Короткий продаючий екран для показу клієнту. `noindex`.
+Прототип підписки на ігри PS5. `noindex`. Світлий ультрамарин, полиця з коробками, демо-бот.
 
 Після злиття в `main`: https://networxua.github.io/grayvdoma-demo/
 
-Тексти тарифів і заперечень — з grayvdoma.in.ua. Гіпотези оферу — у `MARKETING.md`. Кошика немає: заявка йде в демо-бот або в Telegram.
+Шрифти: Dela Gothic One і Manrope, SIL OFL, файли в `assets/fonts`.
