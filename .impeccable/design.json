@@ -1,0 +1,21 @@
+{
+  "colors": {
+    "room": "#07080c",
+    "screen": "#0c1628",
+    "ink": "#e8eef8",
+    "inkDim": "#c5d3ea",
+    "blue": "#2f8cff",
+    "blueIce": "#8fd4ff",
+    "lamp": "#1a140e",
+    "lampInk": "#f6efe4",
+    "onBlue": "#071018"
+  },
+  "typography": {
+    "display": "Unbounded",
+    "text": "Manrope"
+  },
+  "radius": {
+    "card": 18,
+    "screen": 28
+  }
+}
