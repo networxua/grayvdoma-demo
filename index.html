@@ -4,146 +4,118 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#07080b">
-  <title>GrayVDoma — новинки PS5 від 100 ₴ за тиждень</title>
-  <meta name="description" content="Оренда акаунтів PS5 від 100 ₴ за 7 днів. Підписка на вільні ігри — 700 ₴ на місяць. Грай в дома.">
-  <link rel="preload" as="image" href="assets/hero-mobile.webp" media="(max-width: 899px)">
-  <link rel="preload" as="image" href="assets/hero-desktop.webp" media="(min-width: 900px)">
+  <meta name="theme-color" content="#2721E8">
+  <title>GrayVDoma — усі ігри PS5 в одній підписці</title>
+  <meta name="description" content="Підписка на ігри PS5: тиждень 300 ₴, місяць 700 ₴, рік 4 000 ₴. Міняй ігри без обмежень.">
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/site.css">
-  <link rel="icon" href="assets/logo.webp">
 </head>
 <body>
   <a class="skip" href="#main">До вмісту</a>
-
   <header class="hero">
-    <div class="hero-media">
-      <picture>
-        <source media="(min-width: 900px)" srcset="assets/hero-desktop.webp">
-        <img src="assets/hero-mobile.webp" alt="" width="1080" height="1920">
-      </picture>
-    </div>
-    <div class="veil" aria-hidden="true"></div>
-    <div class="top">
-      <a class="logo" href="#main" aria-label="GrayVDoma">
-        <img src="assets/logo.webp" alt="GrayVDoma — Грай в дома" width="1100" height="367">
-      </a>
-    </div>
-    <div class="hero-copy">
-      <h1>Новинки PS5<br>від 100&nbsp;₴<br>за тиждень</h1>
-      <p class="sub">Замість ≈2&nbsp;500&nbsp;₴ за диск.</p>
-      <div class="hero-actions">
+    <p class="wordmark">GRAYVDOMA</p>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1>Усі ігри PS5<br>в одній підписці</h1>
+        <p class="sub">Міняй без обмежень. Став на паузу, коли треба.</p>
+        <p class="price-sticker">від 300&nbsp;₴ / тиждень</p>
         <button class="cta" type="button" data-open-bot>
           <span class="cta-spin" aria-hidden="true"></span>
           <span class="cta-label">Підібрати гру</span>
         </button>
-        <a class="quiet" href="#how">Як це працює</a>
+      </div>
+      <div class="scene" id="scene">
+        <div class="track" id="track"></div>
+        <div class="plank" aria-hidden="true"></div>
       </div>
     </div>
   </header>
 
   <main id="main">
-    <section class="block" id="calc">
-      <h2>Диск чи тиждень</h2>
-      <div class="chips" id="game-picks" role="group" aria-label="Гра"></div>
-      <div class="terms" role="group" aria-label="Термін">
-        <button class="term is-on" type="button" data-days="7">7 днів</button>
-        <button class="term" type="button" data-days="14">14 днів · −10%</button>
-        <button class="term" type="button" data-days="28">28 днів · −20%</button>
+    <section class="band milk" id="why">
+      <h2>Чому підписка</h2>
+      <div class="stickers">
+        <article class="sticker s1">
+          <h3>Без обмежень</h3>
+          <p>Міняй ігри, скільки хочеш. Активний акаунт — один.</p>
+        </article>
+        <article class="sticker s2">
+          <h3>Пауза</h3>
+          <p>Заморозка підписки, коли не граєш. На тижні її немає.</p>
+        </article>
+        <article class="sticker s3">
+          <h3>Дешевше за диск ≈</h3>
+          <p>Тиждень усіх вільних ігор — 300&nbsp;₴. Новий диск коштує інакше.</p>
+        </article>
       </div>
-      <div class="versus">
-        <div class="buy">
-          <p>Купити диск</p>
-          <div class="num">≈2&nbsp;500&nbsp;₴</div>
-        </div>
-        <div class="rent">
-          <p>Оренда <span id="term-label">на 7 днів</span></p>
-          <div class="num" id="rent-price">100&nbsp;₴</div>
-        </div>
-      </div>
-      <p class="save">Лишається ≈<span id="save">2&nbsp;400</span>&nbsp;₴</p>
-      <p class="fine">Ціна диска — ≈, її треба звірити. Оренда від 100&nbsp;₴ / 7 днів — з каталогу. 14 днів −10%, 28 днів −20%.</p>
-      <button class="linkish" type="button" id="calc-go">Залишити заявку на цю гру</button>
     </section>
 
-    <section class="block" id="hits">
-      <h2>Хіти зараз</h2>
-      <div class="rail" id="rail"></div>
-    </section>
-
-    <section class="block" id="how">
+    <section class="band blue" id="how">
       <h2>Як це працює</h2>
-      <ol class="steps" id="steps">
-        <span class="track" aria-hidden="true"><i></i></span>
-        <li><span class="n">1</span><span>Оберіть гру.</span></li>
-        <li><span class="n">2</span><span>Оформіть термін.</span></li>
-        <li><span class="n">3</span><span>Після оплати — доступ.</span></li>
+      <ol class="steps">
+        <li><span>1</span>Обери гру на полиці.</li>
+        <li><span>2</span>Оформи підписку.</li>
+        <li><span>3</span>Граєш і міняєш, коли хочеш.</li>
       </ol>
     </section>
 
-    <section class="block" id="plans">
-      <h2>Що вигідніше</h2>
+    <section class="band milk" id="plans">
+      <h2>Тарифи</h2>
       <div class="plans">
-        <article class="plan is-main">
-          <p class="tag">Вигідно</p>
-          <h3 class="price">700&nbsp;₴</h3>
-          <p>Підписка на місяць. Усі вільні ігри. Зміна раз на 24 години. Активний акаунт — один.</p>
-          <button class="cta" type="button" data-open-bot data-plan="sub">
-            <span class="cta-spin" aria-hidden="true"></span>
-            <span class="cta-label">Обрати підписку</span>
-          </button>
+        <article class="toy">
+          <p>Тиждень</p>
+          <strong>300&nbsp;₴</strong>
+          <span>Усі вільні ігри. Паузи немає.</span>
+          <button type="button" data-open-bot data-plan="week">Взяти</button>
         </article>
-        <article class="plan">
-          <p class="tag">Одна гра</p>
-          <h3 class="price">100&nbsp;₴</h3>
-          <p>7 днів. Мінімальний термін з сайту.</p>
-          <button class="plain" type="button" data-open-bot data-days="7">7 днів</button>
+        <article class="toy hot">
+          <p>Місяць</p>
+          <strong>700&nbsp;₴</strong>
+          <span>Заморозка 300&nbsp;₴, до 14 днів.</span>
+          <button type="button" data-open-bot data-plan="month">Взяти місяць</button>
         </article>
-        <article class="plan">
-          <p class="tag">Довше</p>
-          <h3 class="price">320&nbsp;₴</h3>
-          <p>28 днів. Знижка 20% від чотирьох тижнів по 100&nbsp;₴.</p>
-          <button class="plain" type="button" data-open-bot data-days="28">28 днів</button>
+        <article class="toy">
+          <p>Рік</p>
+          <strong>4&nbsp;000&nbsp;₴</strong>
+          <span>Заморозка 1&nbsp;300&nbsp;₴, до 6 місяців.</span>
+          <button type="button" data-open-bot data-plan="year">Взяти рік</button>
         </article>
       </div>
+      <p class="aside">Окрема гра — від 100&nbsp;₴ / 7 днів. 14 днів −10%, 28 днів −20%.</p>
     </section>
 
-    <section class="block" id="trust">
-      <h2>Чому не страшно</h2>
-      <div class="obj">
-        <h3>Це безпечно?</h3>
-        <p>Кожен акаунт перевірений перед додаванням до каталогу.</p>
-      </div>
-      <div class="obj">
-        <h3>Якщо не спрацює?</h3>
+    <section class="band milk tight" id="faq">
+      <h2>Питання</h2>
+      <details>
+        <summary>Як змінювати ігри?</summary>
+        <p>У тарифі написано: зміна акаунтів без обмежень. Одночасно активний лише один — вийшов і взяв наступний.</p>
+      </details>
+      <details>
+        <summary>Можна поставити на паузу?</summary>
+        <p>Так, це заморозка. Місяць — 300&nbsp;₴ до 14 днів. Рік — 1&nbsp;300&nbsp;₴ до 6 місяців. На тижні заморозки немає.</p>
+      </details>
+      <details>
+        <summary>Якщо гра не запустилась?</summary>
         <p>Напишіть на support@grayvdoma.in.ua. На сайті: безплатна заміна або повернення коштів, гарантія 24 години від отримання.</p>
-      </div>
-      <div class="obj">
-        <h3>Як це працює?</h3>
-        <p>Оберіть гру, термін і після підтвердження оплати отримайте доступ. Зазвичай це 2–5 хвилин.</p>
-      </div>
-      <div class="obj">
-        <h3>Граю зі свого профілю?</h3>
-        <p>П1 і П2 — зі свого. П3 — з акаунту Грай в дома. У підписці зміна раз на 24 години, активний лише один.</p>
-      </div>
+      </details>
+      <details>
+        <summary>Граю зі свого профілю?</summary>
+        <p>Можна зі свого профілю або з акаунту сервісу — як зручніше. Одночасно активний лише один.</p>
+      </details>
     </section>
 
-    <section class="block end" id="end">
-      <h2>Скажи, у що хочеш зіграти.</h2>
-      <div class="hero-actions">
-        <button class="cta" type="button" data-open-bot>
-          <span class="cta-spin" aria-hidden="true"></span>
-          <span class="cta-label">Підібрати гру</span>
-        </button>
-        <a class="quiet" href="https://t.me/SeregaGlusch">Telegram @SeregaGlusch</a>
-      </div>
-      <p class="hours">support@grayvdoma.in.ua · 10:00–22:00, без вихідних</p>
+    <section class="band blue end">
+      <h2>Скажи, у що зіграти.</h2>
+      <button class="cta" type="button" data-open-bot>
+        <span class="cta-spin" aria-hidden="true"></span>
+        <span class="cta-label">Підібрати гру</span>
+      </button>
+      <p class="aside light"><a href="https://t.me/SeregaGlusch">Telegram @SeregaGlusch</a> · support@grayvdoma.in.ua · 10:00–22:00</p>
     </section>
   </main>
 
-  <button class="cta float" type="button" data-open-bot>
-    <span class="cta-spin" aria-hidden="true"></span>
-    <span class="cta-label">Підібрати гру</span>
+  <button class="orb" type="button" data-open-bot aria-label="Підібрати гру">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v6A3.5 3.5 0 0 1 15.5 16H12l-3.2 3.2c-.6.6-1.8.2-1.8-.7V16H8.5A3.5 3.5 0 0 1 5 12.5v-6Z" stroke="#0E0E12" stroke-width="1.8"/></svg>
   </button>
 
   <div class="backdrop" id="backdrop" hidden></div>
@@ -151,7 +123,7 @@
     <header>
       <div>
         <strong id="sheet-title">Підбір гри</strong>
-        <p>Демо. Заявка не йде в бойовий Telegram.</p>
+        <p>Демо. Заявка нікуди не надсилається.</p>
       </div>
       <button type="button" id="sheet-close" aria-label="Закрити">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -159,7 +131,6 @@
     </header>
     <div class="log" id="log"></div>
   </section>
-
   <script src="js/app.js" defer></script>
 </body>
 </html>
